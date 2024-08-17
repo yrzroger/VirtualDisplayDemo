@@ -1,0 +1,38 @@
+cc_defaults {
+    name: "VirtualDisplayDemo_defaults",
+
+    cflags: [
+        "-Wall",
+        "-Werror",
+        "-Wunused",
+        "-Wunreachable-code",
+    ],
+
+    shared_libs: [
+        "libbase",
+        "libbinder",
+        "libcutils",
+        "liblog",
+        "libutils",
+        "libui",
+        "libgui",
+        "libEGL",
+        "libGLESv1_CM",
+    ],
+}
+
+// VirtualDisplayDemo executable
+// =========================================================
+
+cc_binary {
+    name: "VirtualDisplayDemo",
+    defaults: ["VirtualDisplayDemo_defaults"],
+    srcs: [
+        "VirtualDisplayDemo.cpp",
+    ],
+
+    cflags: [
+        "-Wno-deprecated-declarations",
+    ],
+}
+
