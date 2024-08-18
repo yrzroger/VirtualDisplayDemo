@@ -16,11 +16,11 @@ main : 基于Android 14平台开发
 3. adb push VirtualDisplayDemo /system/bin/
 4. adb shell VirtualDisplayDemo 运行程序
 
-$ adb shell VirtualDisplayDemo  
-Create Virtual Display(layer_stack=99)  
-Press any key to exit, waiting ...  
-按下任意键后退出  
-Exit and destroy Virtual Display  
+    $ adb shell VirtualDisplayDemo  
+       Create Virtual Display(layer_stack=99)  
+       Press any key to exit, waiting ...  
+       按下任意键后退出  
+       Exit and destroy Virtual Display  
 
 
 #### 效果展示
@@ -30,12 +30,14 @@ https://mp.weixin.qq.com/s/_WF-wSe8b9uJF_obT-syLA
 https://mp.weixin.qq.com/s/8qTF8iacXFveJ71DGiRLEA  
 
 NativeSFDemo 显示到指定的屏幕上    
-adb shell NativeSFDemo -d layerStack  
-
+adb shell NativeSFDemo -d layerStack    
+![fxzay-5xwln](https://github.com/user-attachments/assets/5414042f-6c30-4434-9524-67e75b74f995)
 
 
 MultiDisplayDemoPro 显示到指定的屏幕上 
 adb shell MultiDisplayDemoPro -f /sdcard/Movies/video1.mp4 -d 2  
+
+![z9arv-t58i0](https://github.com/user-attachments/assets/b77c08b1-6dc9-471d-a998-e4230c21098d)
 
 
 
