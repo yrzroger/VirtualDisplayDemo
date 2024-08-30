@@ -25,8 +25,39 @@ sp<IBinder> mMainDisplay;
 sp<IBinder> mVirtualDisplay;
 sp<SurfaceControl> mSurfaceControl;
 const int mVirtualDisplayLayerStack = 99; 
+bool mEnableMirrorDisplay = false;
 
-int main() {
+static void usage(const char *me)
+{
+    fprintf(stderr, "\nusage: \t%s [options]\n"
+                    "\t--------------------------------------- options ------------------------------------------------\n"
+                    "\t[-h] help\n"
+                    "\t[-m] enable mirror main display\n"
+                    "\t------------------------------------------------------------------------------------------------\n",
+                    me);
+    exit(1);
+}
+
+void parseOptions(int argc, char **argv) {
+    const char *me = argv[0];
+    int res;
+    while((res = getopt(argc, argv, "mh")) >= 0) {
+        switch(res) {
+            case 'm':
+                mEnableMirrorDisplay = true;
+                break;
+            case 'h':
+            default:
+            {
+                usage(me);
+            }
+        }
+    }
+}
+
+int main(int argc, char **argv) {
+    parseOptions(argc, argv);
+
     const auto ids = SurfaceComposerClient::getPhysicalDisplayIds();
     mMainDisplay = SurfaceComposerClient::getPhysicalDisplayToken(ids.front());
     SurfaceComposerClient::getDisplayState(mMainDisplay, &mMainDisplayState);
@@ -36,7 +67,7 @@ int main() {
     mSurfaceControl = SurfaceComposerClient::getDefault()->createSurface(String8("VirtualDisplay-Surface"), 
                                                                   mMainDisplayMode.resolution.getWidth()/2, 
                                                                   mMainDisplayMode.resolution.getHeight()/2,
-																  PIXEL_FORMAT_RGBA_8888,
+                                                                  PIXEL_FORMAT_RGBA_8888,
                                                                   ISurfaceComposerClient::eFXSurfaceBufferState,
                                                                   /*parent*/ nullptr);
 
@@ -44,7 +75,7 @@ int main() {
             .setLayer(mSurfaceControl, std::numeric_limits<int32_t>::max())
             .setLayerStack(mSurfaceControl, ui::DEFAULT_LAYER_STACK)
             .setPosition(mSurfaceControl, 100, 100)
-			.show(mSurfaceControl)
+            .show(mSurfaceControl)
             .apply();
 
     mVirtualDisplay =
@@ -55,14 +86,26 @@ int main() {
     t.setDisplayProjection(mVirtualDisplay, ui::ROTATION_0,
                            Rect(mMainDisplayState.layerStackSpaceRect), 
                            Rect(0, 0, mMainDisplayMode.resolution.getWidth()/2, mMainDisplayMode.resolution.getHeight()/2));
-	t.apply(true);
+    t.apply(true);
 
-	fprintf(stderr, "Create Virtual Display(layer_stack=%d)\n", mVirtualDisplayLayerStack);
-	fprintf(stderr, "Press any key to exit, waiting ...\n");
-	getchar();
-	fprintf(stderr, "Exit and destroy Virtual Display\n");
+    sp<SurfaceControl> mirrorRoot;
+    if(mEnableMirrorDisplay) {
+        mirrorRoot = SurfaceComposerClient::getDefault()->mirrorDisplay(ids.front());
+        if (mirrorRoot == nullptr) {
+            fprintf(stderr, "Failed to create a mirror for VirtualDisplayDemo");
+            return -1;
+        }
+        t.setLayerStack(mirrorRoot, ui::LayerStack::fromValue(mVirtualDisplayLayerStack));
+        t.setDestinationFrame(mirrorRoot, Rect(0, 0, mMainDisplayMode.resolution.getWidth()/2, mMainDisplayMode.resolution.getHeight()/2));
+        t.apply();
+    }
 
-	SurfaceComposerClient::destroyDisplay(mVirtualDisplay);
+    fprintf(stderr, "Create Virtual Display(layer_stack=%d)\n", mVirtualDisplayLayerStack);
+    fprintf(stderr, "Press any key to exit, waiting ...\n");
+    getchar();
+    fprintf(stderr, "Exit and destroy Virtual Display\n");
+
+    SurfaceComposerClient::destroyDisplay(mVirtualDisplay);
 
     return 0;
 }
