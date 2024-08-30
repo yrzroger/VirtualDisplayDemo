@@ -41,9 +41,10 @@ adb shell MultiDisplayDemoPro -f /sdcard/Movies/video1.mp4 -d 2
 ![z9arv-t58i0](https://github.com/user-attachments/assets/b77c08b1-6dc9-471d-a998-e4230c21098d)
 
 
--m选项开启mirrorDisplay并显示到虚拟屏幕上
+-m 选项开启mirrorDisplay并显示到虚拟屏幕上
 ![image](https://github.com/user-attachments/assets/e6786795-3c32-4f0c-8d9a-9b2ca09ae6d1)
+![vscxz-0ovqj](https://github.com/user-attachments/assets/94927ced-201d-46ed-994c-a64ae11d1a08)
 
-![image](https://github.com/user-attachments/assets/89b1d48e-a6ae-4c21-b2ab-0dce2aa22466)
+
 
 
