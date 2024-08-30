@@ -90,12 +90,15 @@ int main(int argc, char **argv) {
 
     sp<SurfaceControl> mirrorRoot;
     if(mEnableMirrorDisplay) {
+		// 创建主屏幕的镜像 mirrorRoot
         mirrorRoot = SurfaceComposerClient::getDefault()->mirrorDisplay(ids.front());
         if (mirrorRoot == nullptr) {
             fprintf(stderr, "Failed to create a mirror for VirtualDisplayDemo");
             return -1;
         }
+		// 将mirrorRoot显示到虚拟屏幕上，也就时虚拟屏幕和主屏幕显示同样内容
         t.setLayerStack(mirrorRoot, ui::LayerStack::fromValue(mVirtualDisplayLayerStack));
+		// 设置mirrorRoot在虚拟屏幕上显示的位置大小
         t.setDestinationFrame(mirrorRoot, Rect(0, 0, mMainDisplayMode.resolution.getWidth()/2, mMainDisplayMode.resolution.getHeight()/2));
         t.apply();
     }
